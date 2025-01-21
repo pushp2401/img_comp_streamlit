@@ -348,6 +348,103 @@ def plot_differences_on_image1(
 
     return overlay1, list_of_differences, difference_masks
 
+def preprocess_image(image_path):
+    """
+    1) Load and prepare the image for further analysis.
+    2) Convert to grayscale, optionally binarize or threshold.
+    3) Return the processed image.
+    """
+    img = cv2.imread(image_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Optional: adaptive thresholding for clearer linework
+    # thresholded = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    #                                     cv2.THRESH_BINARY, 11, 2)
+
+    return gray
+
+def detect_lines_and_grid(processed_image):
+    """
+    1) Detect major horizontal/vertical lines using Hough transform or morphological ops.
+    2) Identify grid lines by analyzing line segments alignment.
+    3) Returns lines or grid intersections.
+    """
+    edges = cv2.Canny(processed_image, 50, 150, apertureSize=3)
+
+    # Hough line detection for demonstration
+    lines = cv2.HoughLinesP(edges, 1, np.pi/180, threshold=100,
+                            minLineLength=100, maxLineGap=10)
+    # Here you would parse out vertical/horizontal lines, cluster them, etc.
+
+    return lines
+
+def run_ocr(processed_image, method='easyocr'):
+    """
+    1) Use an OCR engine to detect text (room labels, dimensions, etc.).
+    2) 'method' can switch between Tesseract or EasyOCR.
+    3) Return recognized text data (text content and bounding boxes).
+    """
+    text_data = []
+
+    if method == 'easyocr':
+        reader = easyocr.Reader(['en', 'ko'], gpu=False)
+        result = reader.readtext(processed_image, detail=1, paragraph=False)
+        # result structure: [ [bbox, text, confidence], ... ]
+        for (bbox, text, conf) in result:
+            text_data.append({'bbox': bbox, 'text': text, 'confidence': conf})
+    else:
+        # Tesseract approach
+        config = r'--psm 6'
+        tess_result = pytesseract.image_to_data(processed_image, config=config, output_type=pytesseract.Output.DICT)
+        # parse data into a structured list
+        for i in range(len(tess_result['text'])):
+            txt = tess_result['text'][i].strip()
+            if txt:
+                x = tess_result['left'][i]
+                y = tess_result['top'][i]
+                w = tess_result['width'][i]
+                h = tess_result['height'][i]
+                conf = tess_result['conf'][i]
+                text_data.append({
+                    'bbox': (x, y, x+w, y+h),
+                    'text': txt,
+                    'confidence': conf
+                })
+    return text_data
+
+def detect_symbols_and_rooms(processed_image):
+    """
+    1) Potentially run object detection (e.g., YOLO, Detectron2) to detect symbols:
+       - Doors, balconies, fixtures, etc.
+    2) Segment out rooms by combining wall detection + adjacency.
+    3) Return data about room polygons, symbols, etc.
+    """
+    # Placeholder: real implementation would require a trained model or rule-based approach.
+    # For demonstration, return empty data.
+    rooms_data = []
+    symbols_data = []
+    return rooms_data, symbols_data
+
+
+
+def blueprint_analyzer(image_path):
+    """
+    Orchestrate the entire pipeline on one image:
+      1) Preprocess
+      2) Detect structural lines
+      3) OCR text detection
+      4) Symbol/room detection
+      5) Compute area differences or summarize
+    """
+    processed_img = preprocess_image(image_path)
+
+    lines = detect_lines_and_grid(processed_img)
+    text_data = run_ocr(processed_img, method='easyocr')
+
+
+    return lines, text_data
+
+
 
 system_prompt = """You are given two construction blueprint images along with their segmentation data.
 
