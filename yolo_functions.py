@@ -409,68 +409,47 @@ Use the relative position data (distance/direction text) to describe where each 
 Do not output raw numeric distances, bounding boxes, or polygon areas in your final summary. Instead, give a natural-language location description (e.g., “near the east side of the main hallway,” “slightly south of the balcony,” etc.).
 Provide your answer in a concise Markdown format, focusing only on significant differences."""
 
-user_prompt = f"""I have two construction blueprint images, Image 1 and Image 2, and here are their segmentation results (with bounding boxes, centers, and areas). Please compare them and provide a short Markdown summary of the differences, ignoring any objects that match in both images:
+# user_prompt = f"""I have two construction blueprint images, Image 1 and Image 2, and here are their segmentation results (with bounding boxes, centers, and areas). Please compare them and provide a short Markdown summary of the differences, ignoring any objects that match in both images:
 
-Image 1:
-image: {image_1}
+# Image 1:
+# image: {image_1}
 
-json
-Copy
-{image_1_data}
-Image 2:
-image: {image_2}
-json
-Copy
-{image_2_data}
+# json
+# Copy
+# {image_1_data}
+# Image 2:
+# image: {image_2}
+# json
+# Copy
+# {image_2_data}
 
-Please:
+# Please:
 
-Compare the two images in terms of architectural/structural changes.
-Ignore objects that appear in both images (same label & near-identical centers).
-Refer to changes in relative location or in known blueprint areas (e.g. “balcony,” “living room,” “main hallway”), not numeric bounding boxes or polygon areas.
-Include mentions of new text or lines if any appear based on an OCR-like analysis.
-Output only the differences in a concise Markdown summary."""
+# Compare the two images in terms of architectural/structural changes.
+# Ignore objects that appear in both images (same label & near-identical centers).
+# Refer to changes in relative location or in known blueprint areas (e.g. “balcony,” “living room,” “main hallway”), not numeric bounding boxes or polygon areas.
+# Include mentions of new text or lines if any appear based on an OCR-like analysis.
+# Output only the differences in a concise Markdown summary."""
 
-user_prompt_2 = f"""I have two construction blueprint images, Image 1 and Image 2, and here are their segmentation results (with bounding boxes, centers, and areas). Please compare them and provide a short Markdown summary of the differences, ignoring any objects that match in both images:
+# user_prompt_2 = f"""I have two construction blueprint images, Image 1 and Image 2, and here are their segmentation results (with bounding boxes, centers, and areas). Please compare them and provide a short Markdown summary of the differences, ignoring any objects that match in both images:
 
-    Image 1:
-    image: {image_1}
+#     Image 1:
+#     image: {image_1}
     
-    json
-    Copy
-    {image_1_data}
-    Image 2:
-    image: {image_2}
-    json
-    Copy
-    {image_2_data}
+#     json
+#     Copy
+#     {image_1_data}
+#     Image 2:
+#     image: {image_2}
+#     json
+#     Copy
+#     {image_2_data}
     
-    Please:
+#     Please:
     
-    Ignore objects that appear in both images with matching labels and nearly identical centers.
-    Use the bounding boxes of recognized “areas” (like “Balcony,” “Living Room,” “Bathroom,” etc.) to determine which area new or changed objects belong to. For instance, if a door’s center is inside or very close to the balcony’s bounding box, treat that door as being “in the balcony.”
-    Do not display any raw bounding box coordinates, center points, or numeric area values in your final response.
-    Summarize only the differences (e.g., newly added objects, missing objects, changed textual labels) in a brief Markdown format.
-    Mention if there are text/label changes (e.g., from an OCR perspective) in any particular area or region"""
+#     Ignore objects that appear in both images with matching labels and nearly identical centers.
+#     Use the bounding boxes of recognized “areas” (like “Balcony,” “Living Room,” “Bathroom,” etc.) to determine which area new or changed objects belong to. For instance, if a door’s center is inside or very close to the balcony’s bounding box, treat that door as being “in the balcony.”
+#     Do not display any raw bounding box coordinates, center points, or numeric area values in your final response.
+#     Summarize only the differences (e.g., newly added objects, missing objects, changed textual labels) in a brief Markdown format.
+#     Mention if there are text/label changes (e.g., from an OCR perspective) in any particular area or region"""
     
-user_prompt_3 = f"""I have two construction blueprint images, Image 1 and Image 2, and here are their segmentation results (with bounding boxes, centers, and areas). Please compare them and provide a short Markdown summary of the differences, ignoring any objects that match in both images:
-    
-    Image 1:
-    image: {image_1}
-    
-    json
-    Copy
-    {image_1_data}
-    Image 2:
-    image: {image_2}
-    json
-    Copy
-    {image_2_data}
-    
-    Please:
-    Compare the two images only in terms of differences—ignore any objects that match (same label and near-identical center).
-    For objects missing in Image 2 (but present in Image 1), or newly added in Image 2, indicate their relative position using known areas or approximate directions. For instance, mention if the missing doors were “towards the north side, near the elevator,” or if new walls appeared “in the southeastern corner, near the balcony.”
-    Summarize any changes in labels or text, again without giving raw bounding box or polygon coordinate data.
-    Provide your final output in a short, clear Markdown summary that describes where objects have changed.
-    Mention if there are text/label changes (e.g., from an OCR perspective) in any particular area or region
-"""

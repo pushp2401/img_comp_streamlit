@@ -140,6 +140,27 @@ if len(uploaded_files) !=0  :
     image_1_data = usable_data(img1_results, image_1) 
     image_2_data = usable_data(img2_results, image_2) 
 
+    user_prompt_3 = f"""I have two construction blueprint images, Image 1 and Image 2, and here are their segmentation results (with bounding boxes, centers, and areas). Please compare them and provide a short Markdown summary of the differences, ignoring any objects that match in both images:
+    
+        Image 1:
+        image: {image_1}
+        
+        json
+        Copy
+        {image_1_data}
+        Image 2:
+        image: {image_2}
+        json
+        Copy
+        {image_2_data}
+        
+        Please:
+        Compare the two images only in terms of differences—ignore any objects that match (same label and near-identical center).
+        For objects missing in Image 2 (but present in Image 1), or newly added in Image 2, indicate their relative position using known areas or approximate directions. For instance, mention if the missing doors were “towards the north side, near the elevator,” or if new walls appeared “in the southeastern corner, near the balcony.”
+        Summarize any changes in labels or text, again without giving raw bounding box or polygon coordinate data.
+        Provide your final output in a short, clear Markdown summary that describes where objects have changed.
+        Mention if there are text/label changes (e.g., from an OCR perspective) in any particular area or region
+    """
 
 
     
