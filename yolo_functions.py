@@ -9,6 +9,9 @@ import hashlib
 import random
 import matplotlib.pyplot as plt
 import cv2
+import easyocr 
+import pytesseract
+
 
 
 from ultralytics import YOLO 
