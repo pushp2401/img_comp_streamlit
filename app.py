@@ -115,7 +115,8 @@ if len(uploaded_files) !=0  :
     final_output_1, class_mask_dict_1 = segment_large_image_with_tiles(
     model,
     # large_image_path=img_1_path,
-    large_image_path= tmp_img1 , 
+    # large_image_path= tmp_img1 ,
+    large_image_path= img1 
     tile_size=1080,
     overlap=120,
     alpha=0.4,
