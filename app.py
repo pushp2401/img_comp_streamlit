@@ -116,7 +116,7 @@ if len(uploaded_files) !=0  :
     model,
     # large_image_path=img_1_path,
     # large_image_path= tmp_img1 ,
-    large_image_path= img1 
+    large_image_path= img1 ,
     tile_size=1080,
     overlap=120,
     alpha=0.4,
