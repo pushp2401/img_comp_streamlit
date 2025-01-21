@@ -93,7 +93,10 @@ if len(uploaded_files) !=0  :
     for one_file in uploaded_files :
         if i == 0 :
             img1 = Image.open(one_file)  
-            tmp_img1 = one_file    
+            print("uploaded file" , one_file)
+            print("img1" , img1)
+            tmp_img1 = one_file  
+            print("tmp_img1" , tmp_img1)  
             st.image(img1)
             i = i + 1
         if i == 1 :
