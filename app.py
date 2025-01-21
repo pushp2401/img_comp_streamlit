@@ -1,12 +1,12 @@
 import streamlit as st
-from PIL import Image
+from PIL import Image 
 import os
 import anthropic
 import base64
 import numpy as np
 from dotenv import load_dotenv
 import cv2
-
+import tempfile
 load_dotenv() 
 
 
@@ -89,12 +89,17 @@ uploaded_files = st.file_uploader("Upload 2 image to compare", accept_multiple_f
 # import pdb; pdb.set_trace()
 # print("upladed file length" , len(uploaded_files))
 if len(uploaded_files) !=0  :
+    temp_dir = tempfile.TemporaryDirectory() 
+    print(temp_dir)
     i = 0
     for one_file in uploaded_files :
         if i == 0 :
             img1 = Image.open(one_file)  
+            sv_path_1 = temp_dir.name + "/img1.jpg" 
+            img1.save(sv_path_1)
             print("uploaded file" , one_file)
             print("img1" , img1)
+
             tmp_img1 = one_file  
             print("tmp_img1" , tmp_img1)  
             st.image(img1)
@@ -119,7 +124,7 @@ if len(uploaded_files) !=0  :
     model,
     # large_image_path=img_1_path,
     # large_image_path= tmp_img1 ,
-    large_image_path= img1 ,
+    large_image_path= sv_path_1 ,
     tile_size=1080,
     overlap=120,
     alpha=0.4,
