@@ -3,9 +3,11 @@ from PIL import Image
 import os
 import anthropic
 import base64
+from dotenv import load_dotenv
 
+load_dotenv() 
 client = anthropic.Anthropic(
-    api_key="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",
+    api_key= os.getenv("ANTHROPIC_API_KEY"),
 )
 
 
