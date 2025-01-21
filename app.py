@@ -64,11 +64,30 @@ def chat_claude(prompt , image1 , image2 ) :
     return message.content[0].text
 
 
-prompt = """Given 2 construction blueprints your task is to analyze carefully both blueprints and point out difference for following categories -
-1. Strcutural grid.
-2. Layout Areas - rooms , balcony , porch , staircase , elevator etc.
-3. Interior changes or optimization.
-Summarize all the difference in paragraph concisely.
+# prompt = """Given 2 construction blueprints your task is to analyze carefully both blueprints and point out difference for following categories -
+# 1. Strcutural grid.
+# 2. Layout Areas - rooms , balcony , porch , staircase , elevator etc.
+# 3. Interior changes or optimization.
+# Summarize all the difference in paragraph concisely.
+# """
+prompt = """
+You are analyzing two construction blueprint images (Image 1 and Image 2). For each image, you have:
+
+A set of objects (walls, doors, stairs, etc.)
+A set of “areas” (e.g., “Balcony,” “Living Room,” “Hallway,” “Bathroom,” etc.) 
+Task Requirements:
+Identify differences between Image 1 and Image 2:
+Newly added objects in Image 2 that were not in Image 1.
+Missing objects in Image 2 that were in Image 1.
+Objects that have changed location or have changed labels.
+Text or label changes, if available.
+For missing or newly added objects, describe their location in terms of relative position or known areas (not raw coordinates):
+For example, say “the missing doors were originally near the top-left corner, adjacent to the main hallway,” or “new walls have been added in the southeast corner, near the living room.”
+Avoid including numeric bounding boxes, polygon areas, or centers in the final explanation.
+If two objects (one in Image 1 and one in Image 2) have the same label and nearly identical centers, consider them the same object and do not report them as a difference.
+Whenever possible, use known area labels to describe positions (e.g., “within the dining area,” “just north of the bathroom,” “adjacent to the balcony,” etc.).
+Return a concise and correct Markdown summary with these differences, focusing on where changes occur.
+
 """
 st.set_page_config(layout = "wide")
 uploaded_files = st.file_uploader("Upload 2 image to compare", accept_multiple_files=True)
