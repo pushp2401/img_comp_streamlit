@@ -2,3 +2,5 @@ anthropic==0.43.1
 pillow==10.4.0
 python-dotenv
 opencv-python
+openai
+ultralytics
